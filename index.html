@@ -1,0 +1,1021 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ฟอร์มข้อมูลลูกค้า CFP-jai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;700&family=Sarabun:wght@400;500;600;700&display=swap">
+<style>
+/* Layout concept: the client fills one section at a time (wizard) with a numbered tab strip, navy ink on light-blue paper like the Investor Playbook reports.
+   Touch first: 48px controls, 17px text so iPad Safari never zooms; the same grid widens to 2 columns on a computer. */
+:root{
+  --paper:#E8F0F8; --card:#F6F9FD; --field:#FFFFFF; --field-soft:#EFF4FA;
+  --ink:#10264A; --ink2:#506683; --line:#BFD0E4; --line2:#D6E2F0;
+  --accent:#1D4F9F; --accent-ink:#FFFFFF; --tint:#DAE7F7; --focus:#1D4F9F;
+  --ok:#1B6E45; --ok-bg:#D8EEE2; --warn:#8F5A00; --warn-bg:#F9E8C6; --bad:#A63232; --bad-bg:#F6DADA; --na-bg:#DEE7F1;
+  --scrim:rgba(10,24,48,.55);
+  --f-body:'Sarabun',system-ui,-apple-system,'Noto Sans Thai',sans-serif;
+  --f-head:'Noto Serif Thai','Sarabun',Georgia,serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1728; --card:#12223A; --field:#0A1424; --field-soft:#0F1D33;
+    --ink:#E4ECF8; --ink2:#9AAECB; --line:#2B4062; --line2:#223552;
+    --accent:#79A9F2; --accent-ink:#0A1526; --tint:#17315A; --focus:#9CC1FF;
+    --ok:#6FD3A0; --ok-bg:#12372A; --warn:#F0BC62; --warn-bg:#40300F; --bad:#F29A9A; --bad-bg:#47202A; --na-bg:#1B2B45;
+    --scrim:rgba(0,0,0,.65); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1728; --card:#12223A; --field:#0A1424; --field-soft:#0F1D33;
+  --ink:#E4ECF8; --ink2:#9AAECB; --line:#2B4062; --line2:#223552;
+  --accent:#79A9F2; --accent-ink:#0A1526; --tint:#17315A; --focus:#9CC1FF;
+  --ok:#6FD3A0; --ok-bg:#12372A; --warn:#F0BC62; --warn-bg:#40300F; --bad:#F29A9A; --bad-bg:#47202A; --na-bg:#1B2B45;
+  --scrim:rgba(0,0,0,.65); color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--f-body);-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:30}
+button,input,select,textarea{font-family:inherit;touch-action:manipulation}
+.wrap{max-width:1040px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding-block:12px 6px}
+.brand{min-width:0}
+.brand small{display:block;font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--accent)}
+.brand b{display:block;font:700 21px/1.25 var(--f-head);text-wrap:balance}
+.who{display:flex;align-items:center;gap:12px;min-width:0}
+.who .nm{min-width:0;text-align:right}
+.who .nm span{display:block;font-size:13px;color:var(--ink2)}
+.who .nm b{display:block;font-weight:600;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-block:6px 10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px 0 10px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--ink2);font:600 15.5px var(--f-body);cursor:pointer}
+.tab .tn{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);font-size:13px;font-variant-numeric:tabular-nums}
+.tab .dot{width:7px;height:7px;border-radius:50%;background:transparent}
+.tab.has .dot{background:var(--ok)}
+.tab:hover{background:var(--tint)}
+.tab.on{background:var(--ink);color:var(--paper)}
+.tab.on .tn{border-color:var(--paper)}
+.tab.on.has .dot{background:var(--paper)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* sections */
+main{padding-block:8px 80px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin:26px 0 4px}
+.sec-head .num{font:700 40px/1 var(--f-head);color:var(--accent);font-variant-numeric:tabular-nums}
+.sec-head h2{margin:0;font:700 26px/1.3 var(--f-head);text-wrap:balance}
+.lede{margin:0 0 6px;color:var(--ink2);max-width:64ch}
+.blk{margin-top:26px}
+h3{margin:0 0 10px;padding-bottom:6px;border-bottom:2px solid var(--ink);font:700 18px/1.35 var(--f-head)}
+.note{margin:0;padding:10px 14px;border-left:4px solid var(--accent);background:var(--tint);border-radius:0 10px 10px 0;font-size:15.5px}
+.hint{font-size:14.5px;color:var(--ink2);margin:4px 0 0}
+
+/* fields */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
+.fld{min-width:0}
+.fld.full{grid-column:1/-1}
+.lab{display:block;margin-bottom:5px;font-size:15px;font-weight:600;color:var(--ink)}
+.in{display:block;width:100%;min-height:48px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--field);color:var(--ink);font:400 17px/1.4 var(--f-body)}
+textarea.in{min-height:92px;resize:vertical}
+.in:focus-visible{outline:3px solid var(--focus);outline-offset:1px;border-color:var(--accent)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.suf{position:relative}
+.suf input{padding-right:52px}
+.suf span{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--ink2);pointer-events:none}
+.dob{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.5fr) minmax(0,1fr);gap:8px}
+.dobinfo{min-height:1.3em;margin:5px 0 0;font-weight:600}
+.dobinfo.bad{color:var(--bad)}
+.seg,.chips{display:flex;flex-wrap:wrap;gap:8px}
+.seg button,.chips button{min-height:48px;padding:0 18px;border:1.5px solid var(--line);border-radius:10px;background:var(--field);color:var(--ink);font:500 16.5px var(--f-body);cursor:pointer}
+.seg button.on,.chips button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--field);cursor:pointer}
+.chk input{width:26px;height:26px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--accent)}
+
+/* repeating tables */
+.tbl{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:12px}
+.thead,.trow{display:grid;grid-template-columns:var(--cols);gap:8px;align-items:center}
+.thead{padding:0 0 6px;font-size:13.5px;font-weight:600;color:var(--ink2);align-items:end}
+.trow{padding:3px 0}
+.cell{min-width:0}
+.cell::before{display:none}
+.fixlab{min-height:48px;display:flex;flex-direction:column;justify-content:center;font-weight:500;line-height:1.35}
+.fixlab small{display:block;font-weight:400;font-size:13px;color:var(--ink2)}
+.autoval{min-height:48px;display:flex;align-items:center;justify-content:flex-end;padding:0 12px;border:1.5px dashed var(--line);border-radius:10px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.del{flex:0 0 auto;width:44px;height:44px;border:0;border-radius:10px;background:transparent;color:var(--ink2);font-size:26px;line-height:1;cursor:pointer}
+.del:hover{background:var(--bad-bg);color:var(--bad)}
+.add{display:block;width:100%;margin-top:8px;min-height:46px;border:1.5px dashed var(--line);border-radius:10px;background:transparent;color:var(--accent);font:600 16px var(--f-body);cursor:pointer}
+.add:hover{background:var(--tint)}
+.ttl{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:10px;padding:10px 4px 0;border-top:1px solid var(--line);font-weight:700}
+.ttl .tv{font:700 20px var(--f-head);font-variant-numeric:tabular-nums}
+.sugg{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.chip{min-height:40px;padding:0 14px;border:1.5px solid var(--line);border-radius:999px;background:var(--field);color:var(--accent);font:600 15px var(--f-body);cursor:pointer}
+.chip:hover{background:var(--tint)}
+
+/* quiz */
+.q{margin-bottom:18px}
+.qt{margin-bottom:8px;font-weight:600}
+.qopts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.qo{min-height:52px;padding:8px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--field);color:var(--ink);text-align:left;font:400 16.5px/1.4 var(--f-body);cursor:pointer}
+.qo.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+
+/* review */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:860px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.tile span{display:block;font-size:14px;color:var(--ink2)}
+.tile b{display:block;font:700 26px/1.3 var(--f-head);font-variant-numeric:tabular-nums}
+.tile small{display:block;font-size:13.5px;color:var(--ink2)}
+.chk-list{display:grid;gap:8px}
+.chk-row{display:flex;align-items:center;gap:12px;padding:8px 8px 8px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.chk-row .cn{flex:1;min-width:0;font-weight:600}
+.pill{display:inline-block;padding:2px 12px;border-radius:999px;font-size:14px;font-weight:700;white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.na{background:var(--na-bg);color:var(--ink2)}
+.list{margin:6px 0 0;padding-left:22px}
+.list li{margin:2px 0}
+
+/* buttons */
+.btn{min-height:48px;padding:0 22px;border:1.5px solid var(--accent);border-radius:10px;background:var(--accent);color:var(--accent-ink);font:600 16.5px var(--f-body);cursor:pointer}
+.btn.small{min-height:44px;padding:0 16px;font-size:15.5px}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.danger{border-color:var(--bad);background:var(--bad);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:34px;padding-top:18px;border-top:1px solid var(--line)}
+.pager .btn{min-width:150px}
+
+/* panel + toast */
+.scrim{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:var(--scrim);padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheet{width:100%;max-width:560px;max-height:100%;overflow:auto;padding:20px;border-radius:14px;background:var(--paper);border:1px solid var(--line);display:grid;gap:12px}
+.sheet-h{display:flex;justify-content:space-between;align-items:center}
+.sheet-h h2{margin:0;font:700 22px var(--f-head)}
+.sheet hr{width:100%;border:0;border-top:1px solid var(--line);margin:4px 0}
+.sheet details{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card)}
+.sheet summary{cursor:pointer;font-weight:600;min-height:32px}
+.sheet details .in{margin-top:10px}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);max-width:min(560px,calc(100% - 32px));padding:12px 18px;border-radius:12px;background:var(--ink);color:var(--paper);font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#status{font-size:13.5px;color:var(--ink2)}
+
+/* tables with 4-5 columns become stacked cards below 860px, tables with 3 columns below 640px */
+@media (max-width:860px){
+  .tbl.t5 .thead{display:none}
+  .tbl.t5 .trow{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));position:relative;margin-bottom:10px;padding:12px 48px 12px 12px;border:1px solid var(--line2);border-radius:10px;background:var(--field-soft)}
+  .tbl.t5 .trow .cell:first-child,.tbl.t5 .trow .cell.wide{grid-column:1/-1}
+  .tbl.t5 .trow .del{position:absolute;top:4px;right:2px}
+  .tbl.t5 .cell::before{display:block;content:attr(data-label);margin-bottom:3px;font-size:13.5px;color:var(--ink2)}
+}
+@media (max-width:640px){
+  .tbl.t3 .thead{display:none}
+  .tbl.t3 .trow{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));position:relative;margin-bottom:10px;padding:12px 48px 12px 12px;border:1px solid var(--line2);border-radius:10px;background:var(--field-soft)}
+  .tbl.t3 .trow .cell:first-child{grid-column:1/-1}
+  .tbl.t3 .trow .del{position:absolute;top:4px;right:2px}
+  .tbl.t3 .cell::before{display:block;content:attr(data-label);margin-bottom:3px;font-size:13.5px;color:var(--ink2)}
+  .grid,.qopts{grid-template-columns:minmax(0,1fr)}
+  .brand b{font-size:18px}
+  .who .nm{display:none}
+  .pager .btn{min-width:0;flex:1}
+}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+</style>
+
+<header class="top">
+  <div class="wrap bar">
+    <div class="brand"><small>CFP-JAI · โทร. 0898112929</small><b>แบบฟอร์มข้อมูลผู้รับคำปรึกษา</b></div>
+    <div class="who">
+      <div class="nm"><span>ผู้กรอก</span><b id="hname">ยังไม่ระบุชื่อ</b></div>
+      <button type="button" class="btn" id="btnFile">บันทึกไฟล์</button>
+    </div>
+  </div>
+  <div class="wrap"><div id="status" role="status">ร่างจะถูกเก็บในเครื่องนี้อัตโนมัติ</div></div>
+  <nav class="wrap tabs" id="tabs" aria-label="หมวดข้อมูล"></nav>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<div id="panel" class="scrim" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ptitle">
+    <div class="sheet-h"><h2 id="ptitle">บันทึกและเปิดไฟล์</h2><button type="button" class="del" id="btnClose" aria-label="ปิด">×</button></div>
+    <p class="hint" style="margin:0">ข้อมูลอยู่ในเครื่องนี้และในไฟล์ที่บันทึกเท่านั้น ไม่ถูกส่งไปที่อื่น เมื่อกรอกเสร็จ กดบันทึกไฟล์ แล้วส่งไฟล์ให้ที่ปรึกษา (ทาง LINE หรืออีเมล)</p>
+    <button type="button" class="btn" id="btnSave">บันทึกเป็นไฟล์ (.txt)</button>
+    <p class="hint" id="saveNote" style="margin:0"></p>
+    <div id="afterSave" hidden>
+      <p class="note">บันทึกแล้ว ถ้าจะให้ผู้รับคำปรึกษาคนถัดไปใช้เครื่องนี้ ให้ล้างฟอร์มก่อน เพื่อไม่ให้เห็นข้อมูลของคนก่อนหน้า</p>
+      <div class="row2"><button type="button" class="btn danger" id="btnClearAfter">ล้างฟอร์มบนเครื่องนี้</button></div>
+    </div>
+    <button type="button" class="btn ghost" id="btnOpen">เปิดไฟล์ที่เคยบันทึกไว้เพื่อแก้ไขต่อ (.txt)</button>
+    <input type="file" id="fileIn" accept=".txt,.json,text/plain,application/json" hidden>
+    <details id="alt">
+      <summary>วิธีสำรอง: คัดลอกหรือวางข้อมูลเป็นข้อความ</summary>
+      <textarea class="in" id="blob" rows="5" spellcheck="false" aria-label="ข้อมูลในรูปข้อความ" placeholder="กด 'สร้างข้อความข้อมูล' เพื่อคัดลอก หรือวางข้อความที่เคยคัดลอกไว้แล้วกด 'โหลดจากข้อความ'"></textarea>
+      <div class="row2">
+        <button type="button" class="btn ghost" id="btnMake">สร้างข้อความข้อมูล</button>
+        <button type="button" class="btn ghost" id="btnLoadBlob">โหลดจากข้อความ</button>
+      </div>
+    </details>
+    <hr>
+    <button type="button" class="btn ghost" id="btnNew">เริ่มกรอกให้คนใหม่</button>
+    <div id="newConfirm" hidden>
+      <p class="note">ข้อมูลที่กรอกอยู่ในฟอร์มจะถูกล้าง ไฟล์ที่บันทึกไว้แล้วไม่ถูกลบ ถ้ายังไม่ได้บันทึกเป็นไฟล์ ให้กดบันทึกก่อน</p>
+      <div class="row2">
+        <button type="button" class="btn danger" id="btnNewYes">ล้างและเริ่มใหม่</button>
+        <button type="button" class="btn ghost" id="btnNewNo">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- helpers ---------- */
+const $=(s,r)=>(r||document).querySelector(s);
+function el(tag,attrs,kids){
+  const e=document.createElement(tag);
+  for(const k in (attrs||{})){
+    const v=attrs[k];
+    if(k==='class') e.className=v;
+    else if(k==='text') e.textContent=v;
+    else if(k.slice(0,2)==='on') e.addEventListener(k.slice(2),v);
+    else if(v===true) e.setAttribute(k,'');
+    else if(v!==false && v!=null) e.setAttribute(k,v);
+  }
+  [].concat(kids||[]).forEach(c=>{ if(c==null||c===false) return; e.append(c.nodeType?c:document.createTextNode(c)); });
+  return e;
+}
+const TH='๐๑๒๓๔๕๖๗๘๙';
+function parseNum(s){
+  const c=String(s).replace(/[๐-๙]/g,d=>TH.indexOf(d)).replace(/,/g,'').replace(/[^0-9.]/g,'');
+  if(c===''||c==='.') return '';
+  const v=parseFloat(c); return isFinite(v)?v:'';
+}
+function fmtIn(v){ if(typeof v==='number') return v.toLocaleString('en-US',{maximumFractionDigits:2}); return v==null?'':String(v); }
+const n=v=>(typeof v==='number'&&isFinite(v))?v:0;
+const money=v=>Math.round(v).toLocaleString('en-US');
+function todayISO(){ const d=new Date(),p=x=>String(x).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+function hhmm(){ const d=new Date(),p=x=>String(x).padStart(2,'0'); return p(d.getHours())+':'+p(d.getMinutes()); }
+function ageFrom(birth,ref){
+  const b=String(birth||'').split('-').map(Number), r=String(ref||todayISO()).split('-').map(Number);
+  if(b.length<3||r.length<3||b.some(isNaN)||r.some(isNaN)) return '';
+  let a=r[0]-b[0]; if(r[1]<b[1]||(r[1]===b[1]&&r[2]<b[2])) a--;
+  return (a>=0&&a<130)?a:'';
+}
+let toastT=null;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),3600); }
+
+/* ---------- form definition ----------
+   Keys (k) and row categories (cat) are what the analysis script reads. Do not rename them without updating cfp_health_check.py. */
+const FREQ=['ต่อเดือน','ต่อปี'];
+const OCC=['พนักงานเอกชน','รัฐวิสาหกิจ','ข้าราชการ','ฟรีแลนซ์ / ธุรกิจส่วนตัว','เกษียณ / อื่นๆ'];
+const MONTHS=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const MON_S=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const GOV=['ข้าราชการ','รัฐวิสาหกิจ'];
+const SP_SEP='คู่สมรสมีเงินได้ ยื่นแยก', SP_JOINT='คู่สมรสมีเงินได้ ร่วมยื่น', SP_NOINC='คู่สมรสไม่มีเงินได้';
+const WHEN={married:()=>S.f.marital==='สมรส',single:()=>S.f.marital!=='สมรส',
+  sp_has_inc:()=>S.f.marital==='สมรส'&&(S.f.tax_sp===SP_SEP||S.f.tax_sp===SP_JOINT),
+  sp_sep:()=>S.f.marital==='สมรส'&&S.f.tax_sp===SP_SEP,
+  govpension:()=>GOV.indexOf(S.f.occ_type)>=0||(S.f.marital==='สมรส'&&GOV.indexOf(S.f.sp_occ_type)>=0)};
+/* basic health-right options (one at a time) and the default suggested from occupation */
+const HR_OPTS=['ประกันสังคม','สวัสดิการข้าราชการ','บัตรทอง (บัตรประกันสุขภาพถ้วนหน้า)','สิทธิรัฐวิสาหกิจตามระเบียบองค์กร','ไม่แน่ใจ / ไม่มี'];
+const HR_DEF={'พนักงานเอกชน':HR_OPTS[0],'ข้าราชการ':HR_OPTS[1],'รัฐวิสาหกิจ':HR_OPTS[3],'ฟรีแลนซ์ / ธุรกิจส่วนตัว':HR_OPTS[2]};
+const HR_EXTRA=['ประกันสุขภาพกลุ่มจากนายจ้าง','ประกันสุขภาพเอกชนที่ซื้อเอง','ประกันโรคร้ายแรง'];
+const HR_PAIRS=[['occ_type','hr_basic'],['sp_occ_type','sp_hr_basic']];
+const SEGSYNC={};
+const fx=(name,cat,extra)=>Object.assign({name:name,cat:cat,fix:true},extra||{});
+const ot=cat=>({name:'',cat:cat});
+
+function personFields(p){ return [
+  {k:p+'name',label:'ชื่อ - นามสกุล',type:'text',full:true},
+  {k:p+'birth',label:'วัน/เดือน/ปีเกิด (กรอกปีเป็น พ.ศ.)',type:'dob'},
+  {k:p+'occ_type',label:p===''?'อาชีพ / ประเภทผู้ทำงาน':'อาชีพ / ประเภทผู้ทำงานของคู่สมรส',type:'select',opts:OCC,hint:'ใช้กำหนดเงินสำรองฉุกเฉินที่เหมาะสมและสิทธิรักษาพยาบาลเริ่มต้น'},
+  {k:p+'mobile',label:'โทรศัพท์มือถือ',type:'tel'},
+  {k:p+'addr',label:'ที่อยู่',type:'area',full:true},
+  {k:p+'tel_home',label:'โทรศัพท์ (บ้าน)',type:'tel'},
+  {k:p+'tel_work',label:'โทรศัพท์ (ที่ทำงาน)',type:'tel'},
+  {k:p+'email',label:'อีเมล',type:'text'},
+  {k:p+'line',label:'Line ID',type:'text'},
+  {k:p+'edu',label:'การศึกษา',type:'text'},
+  {k:p+'hobby',label:'งานอดิเรก',type:'text'}
+];}
+function healthFields(p){ return [
+  {k:p+'disease',label:'โรคประจำตัว',type:'text',full:true,hint:'ถ้าไม่มี เว้นว่างได้'},
+  {k:p+'hosp5',label:'เคยเข้ารักษาตัวในโรงพยาบาลภายใน 5 ปีที่ผ่านมาหรือไม่',type:'seg',opts:['เคย','ไม่เคย']},
+  {k:p+'hosp_detail',label:'รายละเอียด (ถ้ามี)',type:'area',full:true},
+  {k:p+'family_illness_has',label:'คนในครอบครัวสายเลือด (บิดา มารดา พี่น้อง) เคยเป็นโรคร้ายแรงหรือไม่',type:'seg',opts:['มี','ไม่มี','ไม่ทราบ']},
+  {k:p+'family_illness',label:'ประวัติโรคร้ายแรงของคนในครอบครัว',type:'area',full:true,hint:'เช่น มะเร็ง โรคหัวใจ หลอดเลือดสมอง เบาหวาน ระบุว่าใคร เป็นโรคอะไร และตอนอายุเท่าไร'},
+  {k:p+'health_note',label:'หมายเหตุ',type:'text',full:true}
+];}
+function workFields(p){ return [
+  {k:p+'place',label:'สถานที่ทำงาน',type:'text'},
+  {k:p+'pos',label:'ตำแหน่ง',type:'text'},
+  {k:p+'dept',label:'ฝ่าย / แผนก',type:'text'},
+  {k:p+'years',label:'อายุงานถึงปัจจุบัน (ปี)',type:'num'},
+  {k:p+'ret_age',label:'อายุที่คาดว่าจะเกษียณ (ปี)',type:'num'},
+  {k:p+'change',label:'แนวโน้มที่จะเปลี่ยนงาน',type:'seg',opts:['ไม่มี','มี']},
+  {k:p+'change_note',label:'ถ้ามี โปรดระบุ',type:'text',full:true},
+  {k:p+'income',label:'รายได้ปัจจุบัน (บาท/เดือน)',type:'money'},
+  {k:p+'bonus',label:'โบนัส (บาท/ปี)',type:'money'},
+  {k:p+'raise',label:'อัตราการขึ้นเงินเดือน (ต่อปี)',type:'pct'},
+  {k:p+'other',label:'รายได้อื่นๆ (บาท/ปี)',type:'money'},
+  {k:p+'note',label:'หมายเหตุเรื่องรายได้',type:'text',full:true},
+  {k:p+'pvd',label:'มูลค่าเงินกองทุนสำรองเลี้ยงชีพ (PVD) หรือ กบข. สำหรับข้าราชการ ณ ปัจจุบัน (บาท)',type:'money'},
+  {k:p+'pvd_emp',label:'อัตราเงินสะสมของคุณ (ต่อเดือน)',type:'pct',hint:'เป็น % ของเงินเดือน (PVD หรือ กบข.)'},
+  {k:p+'pvd_er',label:'อัตราเงินสมทบจากนายจ้างหรือรัฐ (ต่อเดือน)',type:'pct',hint:'เป็น % ของเงินเดือน (PVD หรือ กบข.)'},
+  {k:p+'opd',label:'สวัสดิการรักษาพยาบาลของบริษัท: ผู้ป่วยนอก OPD (บาท/ปี)',type:'money'},
+  {k:p+'ipd',label:'ผู้ป่วยใน IPD (บาท/ปี)',type:'money'},
+  {k:p+'room',label:'ค่าห้องต่อคืน (บาท/วัน)',type:'money'},
+  {k:p+'life_death',label:'ประกันชีวิตกลุ่ม: ชดเชยกรณีเสียชีวิต (บาท)',type:'money'},
+  {k:p+'life_dis',label:'ประกันชีวิตกลุ่ม: ชดเชยกรณีทุพลภาพ (บาท)',type:'money'}
+];}
+const ASSET_COLS=[
+  {k:'name',label:'รายการ',ph:'ระบุรายการ',w:'1.9fr'},
+  {k:'cost',label:'ราคาต้นทุน (บาท)',type:'money',w:'1fr'},
+  {k:'val',label:'ราคาปัจจุบัน (บาท)',type:'money',w:'1fr'}
+];
+const DEBT_S_COLS=[
+  {k:'name',label:'รายการ',ph:'ระบุรายการ',w:'1.7fr'},
+  {k:'bal',label:'ยอดคงค้าง (บาท)',type:'money',w:'1.1fr'},
+  {k:'pay',label:'ผ่อนต่อเดือน (บาท)',type:'money',w:'1fr'},
+  {k:'rate',label:'ดอกเบี้ย (ต่อปี)',type:'pct',w:'.8fr'}
+];
+const DEBT_L_COLS=DEBT_S_COLS.concat([{k:'yrs',label:'เหลืออีก (ปี)',type:'num',w:'.7fr'}]);
+const FLOW_COLS=[
+  {k:'name',label:'รายการ',ph:'ระบุรายการ',w:'1.9fr'},
+  {k:'amt',label:'จำนวนเงิน (บาท)',type:'money',w:'1.1fr'},
+  {k:'freq',label:'ความถี่',type:'select',opts:FREQ,def:'ต่อเดือน',w:'.9fr'}
+];
+
+const SECTIONS=[
+ {id:'profile',short:'ข้อมูลส่วนตัว',title:'ข้อมูลส่วนตัว',lede:'ข้อมูลทั้งหมดใช้เพื่อวางแผนการเงินของคุณเท่านั้น ช่องไหนไม่มี เว้นว่างไว้ได้ ระบบบันทึกร่างให้อัตโนมัติ เริ่มจากอ่านและให้ความยินยอมด้านล่าง',blocks:[
+  {t:'h',text:'ความยินยอมการใช้ข้อมูล'},
+  {t:'note',text:'ข้อมูลส่วนบุคคลและข้อมูลสุขภาพที่กรอกในฟอร์มนี้ จะถูกเก็บและใช้เพื่อการวางแผนการเงินของคุณเท่านั้น ตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล (PDPA) คุณขอแก้ไขหรือลบข้อมูลได้ภายหลัง กรุณาไม่กรอกเลขบัตรประชาชน เลขบัญชี หรือเลขบัตรเครดิต'},
+  {t:'fields',fields:[
+    {k:'consent',label:'ฉันรับทราบและยินยอมให้เก็บและใช้ข้อมูลส่วนบุคคลนี้เพื่อการวางแผนการเงินเท่านั้น (PDPA)',type:'check'},
+    {k:'consent_name',label:'ชื่อผู้ให้ความยินยอม',type:'text'},
+    {k:'consent_date',label:'วันที่ให้ความยินยอม',type:'date'}
+  ]},
+  {t:'h',text:'ข้อมูลของคุณ'},
+  {t:'fields',fields:[
+    {k:'date_collect',label:'จัดทำ ณ วันที่',type:'date'},
+    {k:'marital',label:'สถานภาพ',type:'select',opts:['โสด','สมรส','หย่าร้าง','หม้าย']}
+  ].concat(personFields(''))},
+  {t:'h',text:'ประวัติสุขภาพของคุณ'},
+  {t:'fields',fields:healthFields('')}
+ ]},
+ {id:'family',short:'คู่สมรสและบุตร',title:'คู่สมรส บุตร และผู้ที่คุณดูแล',lede:'ข้อมูลคู่สมรสจะแสดงเมื่อเลือกสถานภาพ “สมรส” ในหน้าแรก',blocks:[
+  {t:'note',when:'single',text:'ไม่มีข้อมูลคู่สมรสต้องกรอก ถ้าสถานภาพเปลี่ยน ให้กลับไปเลือกที่หน้าแรก'},
+  {t:'h',when:'married',text:'ข้อมูลคู่สมรส'},
+  {t:'fields',when:'married',fields:personFields('sp_')},
+  {t:'h',when:'married',text:'ประวัติสุขภาพของคู่สมรส'},
+  {t:'fields',when:'married',fields:healthFields('sp_')},
+  {t:'table',k:'family',title:'บุตรและผู้อยู่ในความอุปการะ',init:2,addLabel:'+ เพิ่มคน',cols:[
+    {k:'name',label:'ชื่อ',w:'1.4fr'},
+    {k:'rel',label:'ความสัมพันธ์',w:'1fr'},
+    {k:'birth',label:'วัน/เดือน/ปีเกิด (ปี พ.ศ.)',type:'dob',w:'2.6fr'},
+    {k:'note',label:'หมายเหตุ',w:'1.2fr'}
+  ]},
+  {t:'fields',fields:[
+    {k:'child_hr',label:'สิทธิรักษาพยาบาลของบุตรและผู้อยู่ในความอุปการะ (ถ้ามี)',type:'seg',opts:['ใช้สิทธิของคุณ','ใช้สิทธิของคู่สมรส','บัตรทอง','ประกันสังคม (ของตนเอง)','ไม่แน่ใจ / ไม่มี']}
+  ]}
+ ]},
+ {id:'work',short:'การทำงาน',title:'การทำงานและรายได้',lede:'รายได้และสวัสดิการจากที่ทำงาน ใช้ประเมินความคุ้มครองและแผนเกษียณของคุณ',blocks:[
+  {t:'h',text:'ข้อมูลการทำงานของคุณ'},
+  {t:'note',text:'อาชีพและประเภทผู้ทำงานอยู่ในหน้า “ข้อมูลส่วนตัว” แล้ว'},
+  {t:'fields',fields:workFields('w_')},
+  {t:'note',when:'govpension',text:'คุณหรือคู่สมรสเป็นข้าราชการหรือพนักงานรัฐวิสาหกิจ อย่าลืมกรอกบำเหน็จ บำนาญ หรือเงินที่คาดว่าจะได้จาก กบข. หรือกองทุนของหน่วยงาน ในหน้า “เกษียณ-อื่นๆ” ช่องรายได้หลังเกษียณ'},
+  {t:'h',when:'married',text:'ข้อมูลการทำงานของคู่สมรส'},
+  {t:'fields',when:'married',fields:workFields('spw_')}
+ ]},
+ {id:'goals',short:'เป้าหมาย',title:'เป้าหมายทางการเงิน',lede:'เล่าสิ่งที่คุณอยากทำให้ได้ด้วยคำของคุณเอง แล้วค่อยใส่ตัวเลข ถ้ายังไม่แน่ใจจำนวนเงิน เว้นว่างไว้ได้',blocks:[
+  {t:'table',k:'goals',title:'เป้าหมายที่ต้องการ',init:3,total:'amt',totalLabel:'รวมเป้าหมาย (บาท)',
+   suggest:['เกษียณอย่างสบาย','ทุนการศึกษาบุตร','ซื้อบ้าน / คอนโด','ซื้อรถ','กองทุนฉุกเฉิน','ท่องเที่ยว','ปลดหนี้'],
+   cols:[
+    {k:'goal',label:'เป้าหมาย',w:'1.6fr'},
+    {k:'term',label:'ระยะเวลา',type:'select',opts:['ระยะสั้น (ไม่เกิน 3 ปี)','ระยะกลาง (3–10 ปี)','ระยะยาว (เกิน 10 ปี)'],w:'1.4fr'},
+    {k:'amt',label:'จำนวนเงิน (บาท)',type:'money',w:'1.1fr'},
+    {k:'yrs',label:'ภายใน (ปี)',type:'num',w:'.7fr'},
+    {k:'pri',label:'ความสำคัญ',type:'select',opts:['สูง','กลาง','ต่ำ'],w:'.8fr'}
+  ]},
+  {t:'fields',fields:[
+    {k:'worry',label:'เรื่องการเงินที่คุณกังวลที่สุดตอนนี้',type:'area',full:true},
+    {k:'expect',label:'คุณอยากได้อะไรจากการวางแผนครั้งนี้',type:'area',full:true}
+  ]}
+ ]},
+ {id:'balance',short:'งบดุล',title:'งบดุลชีวิต: สินทรัพย์และหนี้สิน',lede:'ภาพรวมว่าวันนี้คุณมีอะไรและเป็นหนี้เท่าไร รายการที่คุณไม่มี ปล่อยว่างไว้ หรือกด × เพื่อซ่อน',blocks:[
+  {t:'fields',fields:[
+    {k:'as_month',label:'ข้อมูลงบดุลและงบกระแสเงินสด ณ สิ้นเดือน',type:'select',opts:MONTHS},
+    {k:'as_year',label:'ปี พ.ศ.',type:'num',hint:'เช่น 2569'}
+  ]},
+  {t:'note',text:'ราคาต้นทุน คือราคาที่ซื้อมา ราคาปัจจุบัน คือมูลค่าตลาดวันนี้ ถ้าไม่ทราบ ใส่ประมาณการได้'},
+  {t:'h',text:'สินทรัพย์'},
+  {t:'table',k:'a_liquid',title:'สินทรัพย์สภาพคล่อง',hint:'เงินที่เบิกใช้ได้ทันทีหรือภายในไม่นาน',total:'val',totalLabel:'รวมสินทรัพย์สภาพคล่อง (บาท)',cols:ASSET_COLS,defCat:'other_liquid',
+   preset:[fx('เงินสด','cash'),fx('ตั๋วเงินคลัง','tbill'),fx('บัญชีเงินฝากออมทรัพย์','saving'),fx('บัญชีเงินฝากประจำ 3 เดือน (DUE)','fd3'),fx('บัญชีเงินฝากประจำ 6 เดือน (DUE)','fd6'),fx('บัญชีเงินฝากประจำ 12 เดือน (DUE)','fd12'),ot('other_liquid')]},
+  {t:'table',k:'a_invest',title:'สินทรัพย์เพื่อการลงทุน',hint:'บ้านที่คุณอยู่เอง ให้ใส่ในหมวด “สินทรัพย์ที่ไม่ก่อให้เกิดรายได้” ด้านล่าง',total:'val',totalLabel:'รวมสินทรัพย์เพื่อการลงทุน (บาท)',cols:ASSET_COLS,defCat:'other_invest',
+   preset:[fx('พันธบัตรรัฐบาล','gov_bond'),fx('หุ้นกู้','bond'),fx('หุ้นสามัญ','stock'),fx('หุ้นบุริมสิทธิ','pref'),fx('กองทุนรวม','fund'),fx('กองทุนรวมหุ้นระยะยาว (LTF)','fund_ltf'),fx('กองทุนรวมเพื่อการเลี้ยงชีพ (RMF)','rmf'),fx('กองทุนรวมเพื่อการออม (SSF)','ssf'),fx('กองทุนรวมไทยเพื่อความยั่งยืน (ThaiESG)','esg'),fx('กองทุนสำรองเลี้ยงชีพ (PVD) / กบข.','pvd'),fx('เงินออมเพื่อวัยเกษียณ','ret_saving'),fx('มูลค่าเงินสดกรมธรรม์ประกันชีวิต','ins_cv'),fx('สหกรณ์ออมทรัพย์','coop'),fx('อสังหาริมทรัพย์เพื่อการลงทุน (ให้เช่า / ที่ดิน)','re_invest'),ot('other_invest'),ot('other_invest')]},
+  {t:'table',k:'a_nonincome',title:'สินทรัพย์ที่ไม่ก่อให้เกิดรายได้',total:'val',totalLabel:'รวมสินทรัพย์ที่ไม่ก่อให้เกิดรายได้ (บาท)',cols:ASSET_COLS,defCat:'other_nonincome',
+   preset:[fx('อสังหาริมทรัพย์ที่อยู่อาศัย / ใช้เอง (บ้าน / คอนโด / ที่ดิน)','re_home'),fx('รถยนต์','car'),fx('พระเครื่อง','amulet'),fx('ทองคำ','gold'),fx('เครื่องเพชรพลอย','jewelry'),ot('other_nonincome')]},
+  {t:'h',text:'หนี้สิน'},
+  {t:'note',text:'ใส่ยอดหนี้ที่ยังเหลือ และยอดที่ผ่อนต่อเดือน ระบบนำค่าผ่อนไปรวมในรายจ่ายคงที่ให้อัตโนมัติ'},
+  {t:'table',k:'l_short',title:'หนี้สินระยะสั้น (ไม่เกิน 1 ปี)',total:'bal',totalLabel:'รวมหนี้สินระยะสั้น (บาท)',cols:DEBT_S_COLS,defCat:'other_short',
+   preset:[fx('ค่าสาธารณูปโภคค้างจ่าย','util'),fx('ยอดคงค้างหนี้บัตรเครดิต','credit'),fx('ยอดคงค้างจากการกู้เพื่อซื้อสินค้า','goods'),ot('other_short'),ot('other_short')]},
+  {t:'table',k:'l_long',title:'หนี้สินระยะยาว (1 ปีขึ้นไป)',total:'bal',totalLabel:'รวมหนี้สินระยะยาว (บาท)',cols:DEBT_L_COLS,defCat:'other_long',
+   preset:[fx('ยอดคงค้างจากการกู้เพื่อการศึกษา','edu'),fx('ยอดคงค้างจากการกู้ซื้อรถยนต์','car'),fx('ยอดคงค้างจากการกู้ซื้อบ้าน','home'),fx('ยอดคงค้างจากการกู้ซื้อคอนโด','condo'),ot('other_long'),ot('other_long')]}
+ ]},
+ {id:'flow',short:'รายได้-รายจ่าย',title:'งบกระแสเงินสด: รายได้ รายจ่าย และเงินออม',lede:'เลือกความถี่ให้ตรงกับที่คุณได้รับหรือจ่ายจริง ระบบแปลงรายปีเป็นเฉลี่ยต่อเดือนให้เอง',blocks:[
+  {t:'note',text:'ค่าผ่อนหนี้และเบี้ยประกัน ระบบดึงจากหน้า “งบดุล” และหน้า “ประกัน” ให้อัตโนมัติ ไม่ต้องกรอกซ้ำ'},
+  {t:'table',k:'inc',title:'รายรับ',total:'monthly',totalLabel:'รวมรายรับเฉลี่ยต่อเดือน (บาท)',cols:FLOW_COLS,defCat:'other_income',
+   fill:{label:'เติมเงินเดือนและโบนัสจากหน้า “การทำงาน”',empty:'ยังไม่มีรายได้ในหน้า “การทำงาน”',fn:fillIncome},
+   preset:[fx('เงินเดือน (รวมค่าล่วงเวลา ค่าคอมมิชชั่น ค่าจ้าง โบนัส)','salary',{freq:'ต่อเดือน'}),fx('ดอกเบี้ยรับ','interest',{freq:'ต่อปี'}),fx('เงินปันผลรับ','dividend',{freq:'ต่อปี'}),fx('รายได้จากค่าเช่า','rent',{freq:'ต่อเดือน'}),fx('รายได้จากการขายสินทรัพย์','sale',{freq:'ต่อปี'}),ot('other_income'),ot('other_income')]},
+  {t:'table',k:'exp_fix',title:'กล่องพันธนาการชีวิต (ค่าใช้จ่ายคงที่)',total:'monthly',totalLabel:'รวมค่าใช้จ่ายคงที่เฉลี่ยต่อเดือน (บาท)',cols:FLOW_COLS,defCat:'other_fixed',
+   preset:[fx('เงินงวดผ่อนชำระคืนหนี้','debt',{auto:'debt',note:'ดึงจากหน้างบดุล'}),fx('เบี้ยประกัน','premium',{auto:'prem',note:'ดึงจากหน้าประกัน'}),fx('ประกันสังคม','ss'),fx('เงินสะสมกองทุนสำรองเลี้ยงชีพ / กบข.','pvd'),ot('other_fixed'),ot('other_fixed'),ot('other_fixed')]},
+  {t:'table',k:'exp_var',title:'กล่องสร้างชีวิตดีดี๊ (ค่าใช้จ่ายผันแปร)',total:'monthly',totalLabel:'รวมค่าใช้จ่ายผันแปรเฉลี่ยต่อเดือน (บาท)',cols:FLOW_COLS,defCat:'other_var',
+   preset:[fx('ค่าอาหาร','food'),fx('ค่าใช้จ่ายสาธารณูปโภค (ค่าไฟ / ค่าน้ำ / อื่นๆ)','utility'),fx('ค่าโทรศัพท์','phone'),fx('ค่าเสื้อผ้า / เครื่องสำอาง','clothes'),fx('ค่าใช้จ่ายนันทนาการ','leisure'),fx('ค่ารักษาพยาบาล','medical'),fx('ค่าใช้จ่ายในการเดินทาง','travel'),fx('เงินจ่ายให้แก่บิดา และ/หรือ มารดา','parents'),fx('ค่าใช้จ่ายของบุตร','children'),fx('ภาษี','tax'),ot('other_var'),ot('other_var')]},
+  {t:'table',k:'sav',title:'กล่องสร้างความรวย (เงินออมและเงินลงทุน)',total:'monthly',totalLabel:'รวมเงินออมและเงินลงทุนเฉลี่ยต่อเดือน (บาท)',cols:FLOW_COLS,defCat:'other_saving',
+   preset:[fx('เงินออม','saving'),fx('เงินลงทุน','invest')]}
+ ]},
+ {id:'ins',short:'ประกัน',title:'ประกันและสิทธิรักษาพยาบาล',lede:'ใส่กรมธรรม์ทั้งหมดที่คุณมี เบี้ยประกันจะถูกนับเป็นรายจ่ายคงที่ให้อัตโนมัติ',blocks:[
+  {t:'table',k:'ins',title:'กรมธรรม์ที่มีอยู่',init:3,total:'prem',totalLabel:'รวมเบี้ยประกันต่อปี (บาท)',addLabel:'+ เพิ่มกรมธรรม์',cols:[
+    {k:'type',label:'ประเภท',type:'select',opts:['ประกันชีวิต','ประกันสุขภาพ','ประกันโรคร้ายแรง','ประกันอุบัติเหตุ','ประกันรถยนต์','ประกันบ้าน / ทรัพย์สิน','อื่นๆ'],w:'1.2fr'},
+    {k:'co',label:'บริษัท / แผน',type:'text',w:'1.3fr'},
+    {k:'sum',label:'ทุนประกัน (บาท)',type:'money',w:'1fr'},
+    {k:'prem',label:'เบี้ยต่อปี (บาท)',type:'money',w:'1fr'},
+    {k:'note',label:'ผู้รับผลประโยชน์ / หมายเหตุ',type:'text',w:'1.3fr'}
+  ]},
+  {t:'h',text:'สิทธิรักษาพยาบาล'},
+  {t:'note',text:'สิทธิรักษาพยาบาลพื้นฐานมักใช้เป็นหลักได้ทีละสิทธิ เลือกสิทธิที่คุณใช้จริงเป็นหลัก ส่วนประกันเสริมเลือกได้หลายข้อ ระบบแนะนำสิทธิเริ่มต้นตามอาชีพที่เลือกในหน้าแรก คุณเปลี่ยนได้เสมอ'},
+  {t:'fields',fields:[
+    {k:'hr_basic',label:'สิทธิรักษาพยาบาลพื้นฐานของคุณ (เลือกข้อเดียว)',type:'seg',opts:HR_OPTS,hrAuto:true},
+    {k:'hr_extra',label:'สิทธิหรือประกันเสริมของคุณ',type:'multi',opts:HR_EXTRA}
+  ]},
+  {t:'h',when:'married',text:'สิทธิรักษาพยาบาลของคู่สมรส'},
+  {t:'fields',when:'married',fields:[
+    {k:'sp_hr_basic',label:'สิทธิรักษาพยาบาลพื้นฐานของคู่สมรส (เลือกข้อเดียว)',type:'seg',opts:HR_OPTS,hrAuto:true},
+    {k:'sp_hr_extra',label:'สิทธิหรือประกันเสริมของคู่สมรส',type:'multi',opts:HR_EXTRA}
+  ]}
+ ]},
+ {id:'risk',short:'ความเสี่ยง',title:'ประสบการณ์และความเสี่ยงการลงทุน',lede:'ไม่มีคำตอบถูกหรือผิด เลือกข้อที่ใกล้เคียงกับคุณที่สุด',blocks:[
+  {t:'fields',fields:[
+    {k:'inv_products',label:'ผลิตภัณฑ์ที่คุณเคยลงทุน',type:'multi',opts:['เงินฝาก','กองทุนรวม','หุ้น','ตราสารหนี้','ทองคำ','คริปโต','อสังหาริมทรัพย์','อนุพันธ์']},
+    {k:'inv_years',label:'ประสบการณ์ลงทุน (ปี)',type:'num'},
+    {k:'max_dd',label:'ขาดทุนสูงสุดที่คุณรับได้ (% ของเงินลงทุน)',type:'pct'}
+  ]},
+  {t:'quiz',qs:[
+    {q:'เงินลงทุนก้อนนี้ คุณจะไม่ได้ใช้อีกนานเท่าไร',o:[['น้อยกว่า 1 ปี',1],['1–3 ปี',2],['3–7 ปี',3],['มากกว่า 7 ปี',4]]},
+    {q:'ถ้าเงินลงทุนของคุณลดลง 20% ภายในหนึ่งปี คุณจะทำอย่างไร',o:[['ขายทั้งหมดทันที',1],['ขายบางส่วน',2],['ถือต่อและรอ',3],['ซื้อเพิ่ม',4]]},
+    {q:'คุณเลือกพอร์ตแบบไหน',o:[['ผลตอบแทนต่ำ แต่เงินต้นแทบไม่ขาดทุน',1],['ผลตอบแทนพอประมาณ ขาดทุนได้เล็กน้อย',2],['ผลตอบแทนสูงขึ้น ขาดทุนได้ปานกลาง',3],['ผลตอบแทนสูงสุด ขาดทุนได้มาก',4]]},
+    {q:'คุณมีประสบการณ์ลงทุนในสินทรัพย์เสี่ยง เช่น หุ้นหรือกองทุนหุ้น แค่ไหน',o:[['ไม่เคยเลย',1],['น้อยกว่า 1 ปี',2],['1–5 ปี',3],['มากกว่า 5 ปี',4]]},
+    {q:'รายได้ของคุณมั่นคงแค่ไหน',o:[['ไม่แน่นอนมาก',1],['ค่อนข้างผันผวน',2],['ค่อนข้างมั่นคง',3],['มั่นคงมาก',4]]},
+    {q:'ภาระหนี้และคนที่คุณต้องดูแลมีมากแค่ไหน',o:[['มีมาก กระทบรายได้หนัก',1],['มีพอสมควร',2],['มีน้อย',3],['แทบไม่มี',4]]}
+  ]},
+  {t:'note',text:'แบบประเมินนี้เป็นจุดเริ่มต้นของการพูดคุยกับที่ปรึกษา ไม่ใช่แบบประเมินความเหมาะสมในการลงทุนตามเกณฑ์ของผู้ให้บริการ'}
+ ]},
+ {id:'tax',short:'ภาษี',title:'ภาษีและการลดหย่อน',lede:'ใช้ข้อมูลปีภาษีล่าสุด ถ้าไม่มีเอกสารอยู่ใกล้มือ ใส่ประมาณการหรือเว้นว่างไว้ได้',blocks:[
+  {t:'h',text:'เงินได้พึงประเมินต่อปี แยกตามมาตรา 40 (บาท)'},
+  {t:'note',text:'ใส่เงินได้ก่อนหักค่าใช้จ่าย ช่องไหนไม่มี เว้นว่างได้ ถ้ายังแยกประเภทไม่ได้ ใช้ช่องรวมสำรองด้านล่างแทน ระบบจะนับเป็นเงินเดือน 40(1)'},
+  {t:'fields',fields:[
+    {k:'tax_i1',label:'40(1) เงินเดือน ค่าจ้าง โบนัส',type:'money'},
+    {k:'tax_i2',label:'40(2) ค่าจ้างทั่วไป ค่าตำแหน่ง ค่านายหน้า',type:'money'},
+    {k:'tax_i3',label:'40(3) ค่าลิขสิทธิ์ ค่าสิทธิต่างๆ',type:'money'},
+    {k:'tax_i4',label:'40(4) ดอกเบี้ย เงินปันผล',type:'money'},
+    {k:'tax_i5a',label:'40(5) ค่าเช่าบ้าน อาคาร สิ่งปลูกสร้าง (เหมา 30%)',type:'money'},
+    {k:'tax_i5b',label:'40(5) ค่าเช่าที่ดินเกษตรกรรม (เหมา 20%)',type:'money'},
+    {k:'tax_i5c',label:'40(5) ค่าเช่าที่ดินอื่น (เหมา 15%)',type:'money'},
+    {k:'tax_i5d',label:'40(5) ค่าเช่ายานพาหนะ (เหมา 30%)',type:'money'},
+    {k:'tax_i5e',label:'40(5) ค่าเช่าทรัพย์สินอื่น (เหมา 10%)',type:'money'},
+    {k:'tax_i6a',label:'40(6) วิชาชีพอิสระ การประกอบโรคศิลปะ (เหมา 60%)',type:'money'},
+    {k:'tax_i6b',label:'40(6) วิชาชีพอิสระอื่น (เหมา 30%)',type:'money'},
+    {k:'tax_i7',label:'40(7) รับเหมาที่ผู้รับเหมาจัดหาวัสดุ (เหมา 60%)',type:'money'},
+    {k:'tax_i8a',label:'40(8) ธุรกิจ พาณิชย์ เกษตร อุตสาหกรรม (เหมา 60% ส่วนเกิน 300,000 เหมา 40%)',type:'money'},
+    {k:'tax_i8b',label:'40(8) เงินได้อื่นตามมาตรา 40(8) (เหมา 60%)',type:'money'},
+    {k:'tax_cost_actual',label:'ค่าใช้จ่ายจริงทั้งหมดที่มีหลักฐาน (ถ้ามี)',type:'money',hint:'ระบบเลือกค่าที่มากกว่าระหว่างหักเหมากับตามจริง'}
+  ]},
+  {t:'h',text:'คู่สมรส'},
+  {t:'note',when:'single',text:'ข้ามส่วนคู่สมรสได้ เพราะสถานภาพที่เลือกไว้ไม่ใช่ “สมรส” ถ้าเปลี่ยนสถานภาพ ให้กลับไปแก้ที่หน้าแรก'},
+  {t:'fields',when:'married',fields:[
+    {k:'tax_sp',label:'สถานะเงินได้ของคู่สมรส และวิธียื่นภาษี',type:'seg',opts:[SP_NOINC,SP_SEP,SP_JOINT]}
+  ]},
+  {t:'note',when:'sp_sep',text:'ยื่นแยก: ลดหย่อนบุตรและบิดามารดาแต่ละคน ใช้สิทธิได้เพียงฝ่ายเดียว ให้เลือกว่าใครใช้ด้านล่าง'},
+  {t:'fields',when:'sp_has_inc',fields:[
+    {k:'tax_sp_income',label:'เงินได้พึงประเมินรวมของคู่สมรสต่อปี (บาท)',type:'money'},
+    {k:'tax_sp_wage',label:'ในนั้นเป็นเงินเดือน 40(1) ต่อปี (บาท)',type:'money'},
+    {k:'tax_sp_withheld',label:'ภาษีที่ถูกหัก ณ ที่จ่ายของคู่สมรสต่อปี (บาท)',type:'money'},
+    {k:'tax_ch_by',label:'ใครใช้สิทธิลดหย่อนบุตร',type:'seg',opts:['คุณ','คู่สมรส','แบ่งกัน']}
+  ]},
+  {t:'h',text:'บุตร บิดามารดา และผู้ที่ดูแล'},
+  {t:'fields',fields:[
+    {k:'tax_ch30',label:'จำนวนบุตร (ลดหย่อนคนละ 30,000)',type:'num'},
+    {k:'tax_ch60',label:'จำนวนบุตรคนที่ 2 เป็นต้นไปที่เกิดตั้งแต่ปี 2561 (คนละ 60,000)',type:'num'},
+    {k:'tax_ch_adopt',label:'จำนวนบุตรบุญธรรม (คนละ 30,000)',type:'num'},
+    {k:'tax_preg_n',label:'จำนวนครั้งของการตั้งครรภ์ในปีภาษี',type:'num'},
+    {k:'tax_preg_amt',label:'ค่าฝากครรภ์และคลอดบุตรที่จ่ายจริง (บาท)',type:'money'},
+    {k:'tax_disabled',label:'จำนวนผู้พิการหรือทุพพลภาพที่คุณดูแล (คนละ 60,000)',type:'num'},
+    {k:'tax_par_f',label:'เลี้ยงดูบิดาของคุณ (อายุ 60 ปีขึ้นไป เงินได้ไม่เกิน 30,000 บาทต่อปี)',type:'check'},
+    {k:'tax_par_m',label:'เลี้ยงดูมารดาของคุณ (อายุ 60 ปีขึ้นไป เงินได้ไม่เกิน 30,000 บาทต่อปี)',type:'check'}
+  ]},
+  {t:'fields',when:'married',fields:[
+    {k:'tax_par_sf',label:'เลี้ยงดูบิดาของคู่สมรส (เงื่อนไขเดียวกัน)',type:'check'},
+    {k:'tax_par_sm',label:'เลี้ยงดูมารดาของคู่สมรส (เงื่อนไขเดียวกัน)',type:'check'}
+  ]},
+  {t:'fields',fields:[
+    {k:'tax_esgx_ltf',label:'ปี 2568 คุณเคยสับเปลี่ยนเงินจากกองทุน LTF ไปลงทุนใน ThaiESGX หรือไม่',type:'seg',opts:['ใช่','ไม่ใช่'],hint:'ใช้กำหนดสิทธิลดหย่อนกลุ่มสับเปลี่ยนจาก LTF'}
+  ]},
+  {t:'h',text:'ภาษีที่ถูกหัก และผลการยื่นปีที่แล้ว'},
+  {t:'fields',fields:[
+    {k:'tax_income',label:'เงินได้พึงประเมินรวมต่อปี (บาท) ช่องรวมสำรอง',type:'money',hint:'ใช้เมื่อยังไม่ได้แยกตามมาตรา 40 ด้านบน'},
+    {k:'tax_withheld',label:'ภาษีที่ถูกหัก ณ ที่จ่ายต่อปี (บาท)',type:'money'},
+    {k:'tax_bracket',label:'ฐานภาษีสูงสุดที่เสีย (%)',type:'pct',hint:'ดูจากเงินได้สุทธิในแบบ ภ.ง.ด. ถ้าไม่ทราบ เว้นว่างได้'},
+    {k:'tax_result',label:'ปีที่แล้ว',type:'seg',opts:['ชำระเพิ่ม','ขอคืน','ไม่มี']},
+    {k:'tax_result_amt',label:'จำนวนเงินที่ชำระเพิ่ม / ขอคืน (บาท)',type:'money'}
+  ]},
+  {t:'table',k:'ded',title:'ค่าลดหย่อนที่ใช้ในปีล่าสุด',total:'used',totalLabel:'รวมลดหย่อนที่ระบุ (บาท)',cols:[{k:'name',label:'รายการ',ph:'ระบุรายการ',w:'2fr'},{k:'used',label:'ใช้ไปในปีล่าสุด (บาท/ปี)',type:'money',w:'1fr'},{k:'plan',label:'แผนที่อยากเทียบ (บาท/ปี)',type:'money',w:'1fr'}],defCat:'other_ded',
+   preset:[fx('เบี้ยประกันชีวิต','life'),fx('เบี้ยประกันสุขภาพ','health'),fx('กองทุนสำรองเลี้ยงชีพ / กบข.','pvd'),fx('RMF','rmf'),fx('SSF','ssf'),fx('Thai ESG / ThaiESGX (เงินใหม่ วงเงินร่วมกัน)','esg'),fx('ดอกเบี้ยเงินกู้ที่อยู่อาศัย','home_int'),fx('เงินบริจาค','donate'),fx('ประกันสังคม','ss'),fx('เบี้ยประกันชีวิตคู่สมรส (ไม่มีเงินได้)','spouse_life'),fx('เบี้ยประกันสุขภาพบิดามารดา','parent_health'),fx('ประกันชีวิตแบบบำนาญ','pension'),fx('กบข.','kbk'),fx('กองทุนการออมแห่งชาติ (กอช.)','nsf'),fx('วิสาหกิจเพื่อสังคม','soc_ent'),fx('ThaiESGX สับเปลี่ยนจาก LTF (แยกวงเงิน)','esgx_swap'),fx('Easy E-Receipt','ereceipt'),fx('ค่าก่อสร้างบ้านใหม่','house_build'),fx('บริจาคการศึกษา / กีฬา / สังคม (e-Donation)','donate_edu'),fx('บริจาคพรรคการเมือง','donate_party'),ot('other_ded')]}
+ ]},
+ {id:'retire',short:'เกษียณ-อื่นๆ',title:'แผนเกษียณและข้อมูลอื่นๆ',lede:'ส่วนสุดท้ายก่อนตรวจความครบถ้วน อายุที่คาดว่าจะเกษียณอยู่ในหน้า “การทำงาน” แล้ว',blocks:[
+  {t:'note',when:'govpension',text:'คุณหรือคู่สมรสเป็นข้าราชการหรือพนักงานรัฐวิสาหกิจ ช่อง “รายได้หลังเกษียณ” ด้านล่าง ให้ใส่บำเหน็จ บำนาญ หรือเงินจาก กบข. และกองทุนของหน่วยงานที่คาดว่าจะทยอยได้รับต่อเดือน'},
+  {t:'fields',fields:[
+    {k:'ret_exp',label:'ค่าใช้จ่ายที่คาดว่าจะต้องใช้หลังเกษียณ (บาท/เดือน ราคาวันนี้)',type:'money'},
+    {k:'ret_pension',label:'รายได้หลังเกษียณที่คาดว่าจะได้ (บาท/เดือน)',type:'money',hint:'เช่น บำนาญข้าราชการ หรือประกันสังคม'},
+    {k:'will',label:'พินัยกรรม',type:'seg',opts:['มี','ไม่มี','กำลังทำ']},
+    {k:'bene',label:'ระบุผู้รับผลประโยชน์ในกรมธรรม์และบัญชีแล้วหรือยัง',type:'seg',opts:['ระบุแล้ว','ยังไม่ได้ระบุ','ไม่แน่ใจ']},
+    {k:'other_notes',label:'ข้อมูลอื่นที่อยากแจ้งที่ปรึกษา',type:'area',full:true}
+  ]}
+ ]},
+ {id:'review',short:'ตรวจก่อนส่ง',title:'ตรวจความครบถ้วนก่อนส่ง',lede:'ตรวจว่าตัวเลขตรงกับที่คุณตั้งใจกรอก แล้วบันทึกไฟล์ส่งให้ที่ปรึกษา',blocks:[{t:'review'}]}
+];
+const LAST=SECTIONS.length-1;
+const TABLES=[];
+SECTIONS.forEach(s=>s.blocks.forEach(b=>{ if(b.t==='table') TABLES.push(b); }));
+
+/* ---------- state ---------- */
+const KEY='cfpjai-intake-v2';
+function blank(b){ const r={cat:b.defCat||'other'}; b.cols.forEach(c=>{ if(c.def!==undefined) r[c.k]=c.def; }); return r; }
+function presetRows(b){
+  if(b.preset) return b.preset.map(p=>Object.assign(blank(b),p));
+  const cnt=b.init===undefined?2:b.init, out=[];
+  for(let i=0;i<cnt;i++) out.push(blank(b));
+  return out;
+}
+function fresh(){ const s={f:{date_collect:todayISO()},t:{},cur:0}; TABLES.forEach(b=>{ s.t[b.k]=presetRows(b); }); return s; }
+let S=fresh();
+function payload(){ return {app:'cfp-jai-intake',v:2,saved:new Date().toISOString(),cur:S.cur,f:S.f,t:S.t}; }
+function adopt(o){
+  if(!o||o.app!=='cfp-jai-intake'||o.v!==2||!o.f||typeof o.f!=='object'||!o.t||typeof o.t!=='object') return false;
+  const s=fresh();
+  s.f=Object.assign({},o.f);
+  TABLES.forEach(b=>{ if(Array.isArray(o.t[b.k])) s.t[b.k]=o.t[b.k].filter(r=>r&&typeof r==='object'); });
+  /* migration: files saved before the full tax page lack the new fixed deduction rows */
+  TABLES.forEach(b=>{
+    if(b.k!=='ded'||!Array.isArray(o.t[b.k])) return;
+    const rows=s.t[b.k];
+    b.preset.forEach(p=>{
+      if(p.fix){ const old=rows.find(r=>r.fix&&r.cat===p.cat); if(old&&(p.cat==='esg'||p.cat==='esgx_swap')) old.name=p.name; }
+      if(p.fix&&!rows.some(r=>r.fix&&r.cat===p.cat)){ let at=0; rows.forEach((r,i)=>{ if(r.fix) at=i+1; }); rows.splice(at,0,Object.assign(blank(b),p)); }
+    });
+  });
+  s.cur=(Number.isInteger(o.cur)&&o.cur>=0&&o.cur<=LAST)?o.cur:0;
+  S=s; return true;
+}
+let pt=null;
+function persistSoon(){ clearTimeout(pt); pt=setTimeout(persist,500); }
+function persist(){
+  try{ localStorage.setItem(KEY,JSON.stringify(payload())); $('#status').textContent='บันทึกร่างในเครื่องนี้แล้ว '+hhmm()+' · อย่าลืมบันทึกเป็นไฟล์เมื่อกรอกเสร็จ'; }
+  catch(e){ $('#status').textContent='เก็บร่างอัตโนมัติในเครื่องนี้ไม่ได้ ให้บันทึกเป็นไฟล์แทน'; }
+}
+try{ const raw=localStorage.getItem(KEY); if(raw) adopt(JSON.parse(raw)); }catch(e){}
+function flushNow(){ clearTimeout(pt); persist(); }
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') flushNow(); });
+window.addEventListener('pagehide',flushNow);
+
+/* ---------- sums ---------- */
+function sumT(k,col){ return (S.t[k]||[]).reduce((a,r)=>a+n(r[col]),0); }
+function autoVal(kind){ return kind==='debt'?sumT('l_short','pay')+sumT('l_long','pay'):(kind==='prem'?sumT('ins','prem')/12:0); }
+function rowMonthly(r){ return r.auto?autoVal(r.auto):n(r.amt)*(r.freq==='ต่อปี'?1/12:1); }
+function monthlyOf(k){ return (S.t[k]||[]).reduce((a,r)=>a+rowMonthly(r),0); }
+function fillIncome(rows,b){
+  const base=n(S.f.w_income), bonus=n(S.f.w_bonus), oth=n(S.f.w_other);
+  if(!base&&!bonus&&!oth) return false;
+  let sal=rows.find(r=>r.cat==='salary');
+  if(!sal){ sal=blank(b); sal.cat='salary'; sal.name='เงินเดือน'; rows.unshift(sal); }
+  if(base||bonus){ sal.amt=base*12+bonus; sal.freq='ต่อปี'; }
+  if(oth){
+    let o=rows.find(r=>r.cat==='other_income'&&!r.fix);
+    if(!o){ o=blank(b); rows.push(o); }
+    if(!o.name) o.name='รายได้อื่นๆ (จากหน้าการทำงาน)';
+    o.amt=oth; o.freq='ต่อปี';
+  }
+  return true;
+}
+
+/* ---------- inputs ---------- */
+function makeInput(col,id,get,set){
+  const t=col.type||'text';
+  let inp;
+  if(t==='select'){
+    inp=el('select',{class:'in',id:id,'aria-label':col.label});
+    inp.append(el('option',{value:'',text:'เลือก'}));
+    col.opts.forEach(o=>inp.append(el('option',{value:o,text:o})));
+    const cur=get(); inp.value=cur==null?'':cur;
+    inp.addEventListener('change',()=>set(inp.value));
+  }else if(t==='money'||t==='pct'||t==='num'){
+    inp=el('input',{class:'in num',id:id,type:'text',inputmode:t==='num'?'numeric':'decimal',autocomplete:'off','aria-label':col.label});
+    inp.value=fmtIn(get());
+    inp.addEventListener('input',()=>set(parseNum(inp.value)));
+    inp.addEventListener('focus',()=>{ const v=parseNum(inp.value); inp.value=v===''?'':String(v); });
+    inp.addEventListener('blur',()=>{ inp.value=fmtIn(parseNum(inp.value)); });
+  }else if(t==='area'){
+    inp=el('textarea',{class:'in',id:id,rows:'3'});
+    inp.value=get()||'';
+    inp.addEventListener('input',()=>set(inp.value));
+  }else{
+    inp=el('input',{class:'in',id:id,type:t==='date'?'date':(t==='tel'?'tel':'text'),autocomplete:'off','aria-label':col.label,placeholder:col.ph||''});
+    inp.value=get()||'';
+    inp.addEventListener('input',()=>set(inp.value));
+  }
+  return inp;
+}
+function withSuffix(inp,col){
+  if(col.type==='money') return el('div',{class:'suf'},[inp,el('span',{text:'บาท'})]);
+  if(col.type==='pct') return el('div',{class:'suf'},[inp,el('span',{text:'%'})]);
+  return inp;
+}
+function fieldEl(fd){
+  const id='f_'+fd.k, t=fd.type;
+  const full=fd.full||t==='seg'||t==='multi'||t==='area'||t==='check'||t==='dob';
+  const wrap=el('div',{class:'fld'+(full?' full':'')});
+  const setF=v=>{ S.f[fd.k]=v; changed(); };
+  if(t==='dob'){
+    wrap.append(el('div',{class:'lab',text:fd.label}));
+    wrap.append(dobEl(S.f,fd.k,fd.label,false));
+  }else if(t==='seg'){
+    wrap.append(el('div',{class:'lab',id:'l_'+fd.k,text:fd.label}));
+    const g=el('div',{class:'seg',role:'radiogroup','aria-labelledby':'l_'+fd.k});
+    const btns=fd.opts.map(o=>el('button',{type:'button',role:'radio',text:o,onclick:()=>{
+      if(fd.hrAuto){ S.f[fd.k]=o; S.f[fd.k+'_src']='user'; } else S.f[fd.k]=(S.f[fd.k]===o?'':o);
+      sync(); changed();
+    }}));
+    const sync=()=>btns.forEach((b,i)=>{ const on=S.f[fd.k]===fd.opts[i]; b.classList.toggle('on',on); b.setAttribute('aria-checked',String(on)); });
+    SEGSYNC[fd.k]=sync;
+    btns.forEach(b=>g.append(b)); sync(); wrap.append(g);
+  }else if(t==='multi'){
+    wrap.append(el('div',{class:'lab',id:'l_'+fd.k,text:fd.label}));
+    const g=el('div',{class:'chips',role:'group','aria-labelledby':'l_'+fd.k});
+    if(!Array.isArray(S.f[fd.k])) S.f[fd.k]=[];
+    const btns=fd.opts.map(o=>el('button',{type:'button',text:o,onclick:()=>{
+      const a=S.f[fd.k], i=a.indexOf(o); if(i>=0) a.splice(i,1); else a.push(o); sync(); changed();
+    }}));
+    const sync=()=>btns.forEach((b,i)=>{ const on=S.f[fd.k].indexOf(fd.opts[i])>=0; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); });
+    btns.forEach(b=>g.append(b)); sync(); wrap.append(g);
+  }else if(t==='check'){
+    const cb=el('input',{type:'checkbox',id:id});
+    cb.checked=!!S.f[fd.k];
+    cb.addEventListener('change',()=>{
+      if(fd.k==='consent'&&cb.checked&&!S.f.consent_date){ S.f.consent_date=todayISO(); const de=$('#f_consent_date'); if(de) de.value=S.f.consent_date; }
+      setF(cb.checked);
+    });
+    wrap.append(el('label',{class:'chk',for:id},[cb,el('span',{text:fd.label})]));
+  }else{
+    wrap.append(el('label',{class:'lab',for:id,text:fd.label}));
+    wrap.append(withSuffix(makeInput(fd,id,()=>S.f[fd.k],setF),fd));
+  }
+  if(fd.hint) wrap.append(el('p',{class:'hint',text:fd.hint}));
+  return wrap;
+}
+
+/* ---------- date of birth: day / month / year (Buddhist Era) ---------- */
+const pad2=x=>String(x).padStart(2,'0');
+function dobParts(obj,key){
+  /* old drafts only hold the ISO value: rebuild the three parts from it */
+  if(!obj[key+'_y']&&!obj[key+'_d']&&!obj[key+'_m']&&/^\d{4}-\d{2}-\d{2}$/.test(String(obj[key]||''))){
+    const a=obj[key].split('-').map(Number); obj[key+'_y']=String(a[0]+543); obj[key+'_m']=String(a[1]); obj[key+'_d']=String(a[2]);
+  }
+}
+function dobEl(obj,key,label,compact){
+  dobParts(obj,key);
+  const box=el('div',{class:'dobwrap'});
+  const row=el('div',{class:'dob'});
+  const d=el('input',{class:'in num',type:'text',inputmode:'numeric',maxlength:'2',placeholder:'วัน',autocomplete:'off','aria-label':label+' วัน'});
+  const m=el('select',{class:'in','aria-label':label+' เดือน'});
+  m.append(el('option',{value:'',text:'เดือน'}));
+  (compact?MON_S:MONTHS).forEach((x,i)=>m.append(el('option',{value:String(i+1),text:x})));
+  const y=el('input',{class:'in num',type:'text',inputmode:'numeric',maxlength:'4',placeholder:'ปี พ.ศ.',autocomplete:'off','aria-label':label+' ปี พ.ศ.'});
+  d.value=obj[key+'_d']||''; m.value=obj[key+'_m']||''; y.value=obj[key+'_y']||'';
+  const info=el('p',{class:'hint dobinfo','aria-live':'polite'});
+  function calc(){
+    const dd=parseInt(obj[key+'_d'],10), mm=parseInt(obj[key+'_m'],10), yy=parseInt(obj[key+'_y'],10);
+    let iso='', msg='', bad=false;
+    if(dd&&mm&&yy){
+      const ce=yy-543, cur=new Date().getFullYear();
+      if(yy<2400){ msg='ปีนี้ดูเหมือนเป็นปี ค.ศ. ช่องนี้ใช้ปี พ.ศ. ลองบวก 543'; bad=true; }
+      else if(ce>cur||dd<1||dd>new Date(ce,mm,0).getDate()){ msg='วันที่ไม่ถูกต้อง ตรวจวัน เดือน และปี พ.ศ. อีกครั้ง'; bad=true; }
+      else iso=ce+'-'+pad2(mm)+'-'+pad2(dd);
+    }
+    obj[key]=iso;
+    if(iso){
+      const a=ageFrom(iso,S.f.date_collect);
+      if(a===''){ msg='วันเกิดอยู่หลังวันที่จัดทำ ตรวจอีกครั้ง'; bad=true; }
+      else { msg='อายุ '+a+' ปี'; if(a>100){ msg+=' (มากกว่า 100 ปี ตรวจปี พ.ศ. อีกครั้ง)'; bad=true; } }
+    }
+    info.textContent=msg; info.classList.toggle('bad',bad);
+  }
+  d.addEventListener('input',()=>{ d.value=d.value.replace(/\D/g,''); obj[key+'_d']=d.value; calc(); changed(); });
+  m.addEventListener('change',()=>{ obj[key+'_m']=m.value; calc(); changed(); });
+  y.addEventListener('input',()=>{ y.value=y.value.replace(/\D/g,''); obj[key+'_y']=y.value; calc(); changed(); });
+  row.append(d,m,y); box.append(row,info); box._calc=calc; calc();
+  return box;
+}
+function refreshDob(){ document.querySelectorAll('.dobwrap').forEach(e=>{ if(e._calc) e._calc(); }); }
+function autoHR(){
+  HR_PAIRS.forEach(p=>{
+    const occ=S.f[p[0]], h=p[1], def=HR_DEF[occ];
+    if(def&&(!S.f[h]||S.f[h+'_src']==='auto')&&S.f[h]!==def){ S.f[h]=def; S.f[h+'_src']='auto'; if(SEGSYNC[h]) SEGSYNC[h](); }
+  });
+}
+
+/* ---------- repeating tables ---------- */
+function tableEl(b){
+  const rows=S.t[b.k]||(S.t[b.k]=[]);
+  const box=el('div',{class:'tbl '+(b.cols.length<=3?'t3':'t5'),'data-t':b.k});
+  box.style.setProperty('--cols',b.cols.map(c=>c.w||'1fr').join(' ')+' 44px');
+  function refresh(focusLast){
+    const nb=tableEl(b); box.replaceWith(nb);
+    if(focusLast){ const rs=nb.querySelectorAll('.trow'); const last=rs[rs.length-1]; const f=last&&last.querySelector('input,select'); if(f) f.focus(); }
+  }
+  if(b.suggest||b.fill){
+    const sg=el('div',{class:'sugg'});
+    if(b.suggest){
+      sg.append(el('span',{class:'hint',text:'เพิ่มเร็ว:'}));
+      b.suggest.forEach(s=>sg.append(el('button',{type:'button',class:'chip',text:'+ '+s,onclick:()=>{ const r=blank(b); r[b.cols[0].k]=s; rows.push(r); refresh(true); changed(); }})));
+    }
+    if(b.fill){
+      sg.append(el('button',{type:'button',class:'chip',text:b.fill.label,onclick:()=>{
+        if(!b.fill.fn(rows,b)){ toast(b.fill.empty); return; }
+        refresh(false); changed(); toast('เติมข้อมูลแล้ว ตรวจตัวเลขอีกครั้ง');
+      }}));
+    }
+    box.append(sg);
+  }
+  box.append(el('div',{class:'thead','aria-hidden':'true'},b.cols.map(c=>el('div',{text:c.label})).concat([el('div')])));
+  rows.forEach((r,i)=>{
+    const row=el('div',{class:'trow'});
+    b.cols.forEach((c,ci)=>{
+      const cell=el('div',{class:'cell'+(c.type==='dob'?' wide':''),'data-label':c.label});
+      if(c.type==='dob') cell.append(dobEl(r,c.k,c.label,true));
+      else if(ci===0&&r.fix) cell.append(el('div',{class:'fixlab'},[r[c.k],r.note?el('small',{text:r.note}):null]));
+      else if(r.auto&&c.k==='amt') cell.append(el('div',{class:'autoval num','data-auto':r.auto,text:'0'}));
+      else if(r.auto&&c.k==='freq') cell.append(el('div',{class:'fixlab',text:'ต่อเดือน'}));
+      else cell.append(makeInput(c,null,()=>r[c.k],v=>{ r[c.k]=v; changed(); }));
+      row.append(cell);
+    });
+    row.append(r.auto?el('div'):el('button',{type:'button',class:'del','aria-label':'ลบรายการนี้',text:'×',onclick:()=>{ rows.splice(i,1); refresh(false); changed(); }}));
+    box.append(row);
+  });
+  box.append(el('button',{type:'button',class:'add',text:b.addLabel||'+ เพิ่มรายการ',onclick:()=>{ rows.push(blank(b)); refresh(true); changed(); }}));
+  if(b.total) box.append(el('div',{class:'ttl'},[el('span',{text:b.totalLabel||'รวม'}),el('span',{class:'tv','data-total':b.k,text:'0'})]));
+  return box;
+}
+function totalOf(b){
+  const rows=S.t[b.k]||[];
+  if(b.total==='monthly') return monthlyOf(b.k);
+  return rows.reduce((a,r)=>a+n(r[b.total]),0);
+}
+function updateTotals(){
+  TABLES.forEach(b=>{ if(!b.total) return; const e=$('[data-total="'+b.k+'"]'); if(e) e.textContent=money(totalOf(b)); });
+  document.querySelectorAll('[data-auto]').forEach(e=>{ e.textContent=money(autoVal(e.getAttribute('data-auto'))); });
+}
+
+/* ---------- risk quiz ---------- */
+function quizEl(b){
+  const box=el('div',{class:'quiz'});
+  b.qs.forEach((q,qi)=>{
+    const k='q'+(qi+1), g=el('div',{class:'q',role:'radiogroup','aria-labelledby':'ql_'+k});
+    g.append(el('div',{class:'qt',id:'ql_'+k,text:(qi+1)+'. '+q.q}));
+    const list=el('div',{class:'qopts'});
+    const btns=q.o.map((o,oi)=>el('button',{type:'button',class:'qo',role:'radio',text:o[0],onclick:()=>{ S.f[k]=(S.f[k]===oi?'':oi); sync(); changed(); }}));
+    const sync=()=>btns.forEach((x,oi)=>{ const on=S.f[k]===oi; x.classList.toggle('on',on); x.setAttribute('aria-checked',String(on)); });
+    btns.forEach(x=>list.append(x)); sync(); g.append(list); box.append(g);
+  });
+  return box;
+}
+const RISK_Q=SECTIONS.find(s=>s.id==='risk').blocks.find(b=>b.t==='quiz').qs;
+function riskDone(){ return RISK_Q.filter((q,i)=>typeof S.f['q'+(i+1)]==='number').length; }
+
+/* ---------- review (shows sums only, no ratios or verdicts) ---------- */
+function totals(){
+  const assets=sumT('a_liquid','val')+sumT('a_invest','val')+sumT('a_nonincome','val');
+  const debt=sumT('l_short','bal')+sumT('l_long','bal');
+  const inc=monthlyOf('inc');
+  const out=monthlyOf('exp_fix')+monthlyOf('exp_var')+monthlyOf('sav');
+  const spend=monthlyOf('exp_fix')+monthlyOf('exp_var');
+  return {assets,debt,inc,out,spend};
+}
+function missing(){
+  const T=totals(), m=[];
+  if(!S.f.name) m.push('ชื่อ - นามสกุล');
+  if(!S.f.birth) m.push('วัน/เดือน/ปีเกิด');
+  if(!S.f.marital) m.push('สถานภาพ');
+  if(!S.f.occ_type) m.push('อาชีพ / ประเภทผู้ทำงาน (หน้า “ข้อมูลส่วนตัว”)');
+  if(!S.f.as_month||!n(S.f.as_year)) m.push('เดือนและปีของงบดุล (หน้า “งบดุล”)');
+  if(T.assets<=0) m.push('สินทรัพย์ (หน้า “งบดุล”)');
+  if(T.inc<=0) m.push('รายรับ (หน้า “รายได้-รายจ่าย”)');
+  if(T.spend<=0) m.push('ค่าใช้จ่าย (หน้า “รายได้-รายจ่าย”)');
+  if(riskDone()<RISK_Q.length) m.push('แบบประเมินความเสี่ยง (ตอบแล้ว '+riskDone()+' จาก '+RISK_Q.length+' ข้อ)');
+  if(!n(S.f.w_ret_age)) m.push('อายุที่คาดว่าจะเกษียณ (หน้า “การทำงาน”)');
+  if(!S.f.consent) m.push('ความยินยอมการใช้ข้อมูล (หน้า “ข้อมูลส่วนตัว” ด้านบน)');
+  return m;
+}
+function tile(label,val,sub){ return el('div',{class:'tile'},[el('span',{text:label}),el('b',{text:val}),sub?el('small',{text:sub}):null]); }
+function renderReview(){
+  const box=$('#revbox'); if(!box) return;
+  const T=totals(), m=missing();
+  box.textContent='';
+  box.append(el('h3',{text:'ตัวเลขรวมที่คุณกรอก'}));
+  box.append(el('div',{class:'tiles'},[
+    tile('สินทรัพย์รวม',money(T.assets)+' บาท','ราคาปัจจุบัน'),
+    tile('หนี้สินรวม',money(T.debt)+' บาท'),
+    tile('รายรับเฉลี่ยต่อเดือน',money(T.inc)+' บาท'),
+    tile('รายจ่ายและเงินออมเฉลี่ยต่อเดือน',money(T.out)+' บาท','รวมค่าผ่อนหนี้และเบี้ยประกัน')
+  ]));
+  box.append(el('p',{class:'hint',text:'ถ้าตัวเลขไหนดูผิดปกติ กดที่หมวดด้านล่างเพื่อกลับไปแก้ไข'}));
+  const cl=el('div',{class:'blk'},[el('h3',{text:'แต่ละหมวด'})]);
+  const list=el('div',{class:'chk-list'});
+  SECTIONS.forEach((sec,i)=>{
+    if(i===LAST) return;
+    const has=secHasData(sec);
+    list.append(el('div',{class:'chk-row'},[
+      el('span',{class:'cn',text:(i+1)+'. '+sec.short}),
+      el('span',{class:'pill '+(has?'ok':'na'),text:has?'มีข้อมูล':'ยังว่าง'}),
+      el('button',{type:'button',class:'btn ghost small',text:'เปิด',onclick:()=>show(i)})
+    ]));
+  });
+  cl.append(list); box.append(cl);
+  const mb=el('div',{class:'blk'},[el('h3',{text:'ข้อมูลสำคัญที่ยังไม่ได้กรอก'})]);
+  if(m.length){ const u=el('ul',{class:'list'}); m.forEach(x=>u.append(el('li',{text:x}))); mb.append(u); mb.append(el('p',{class:'hint',text:'ส่งได้ทั้งที่ยังไม่ครบ แต่ที่ปรึกษาจะวิเคราะห์ได้แม่นยำขึ้นเมื่อข้อมูลครบ'})); }
+  else mb.append(el('p',{class:'note',text:'ข้อมูลสำคัญครบแล้ว'}));
+  box.append(mb);
+  box.append(el('div',{class:'row2'},[el('button',{type:'button',class:'btn',text:'บันทึกไฟล์เพื่อส่งให้ที่ปรึกษา',onclick:()=>openPanel()})]));
+}
+
+/* ---------- build ---------- */
+function blockEl(b){
+  let node;
+  if(b.t==='h') node=el('h3',{text:b.text,style:'margin-top:34px'});
+  else if(b.t==='note') node=el('div',{class:'blk'},[el('p',{class:'note',text:b.text})]);
+  else if(b.t==='fields') node=el('div',{class:'blk'},[el('div',{class:'grid'},b.fields.map(fieldEl))]);
+  else if(b.t==='table'){
+    node=el('div',{class:'blk'});
+    if(b.title) node.append(el('h3',{text:b.title}));
+    if(b.hint) node.append(el('p',{class:'hint',text:b.hint,style:'margin:-4px 0 10px'}));
+    node.append(tableEl(b));
+  }
+  else if(b.t==='quiz') node=el('div',{class:'blk'},[el('h3',{text:'แบบประเมินเบื้องต้น'}),quizEl(b)]);
+  else if(b.t==='review') node=el('div',{id:'revbox'});
+  else node=el('div');
+  if(b.when) node.setAttribute('data-when',b.when);
+  return node;
+}
+function applyWhen(){ document.querySelectorAll('[data-when]').forEach(e=>{ e.hidden=!WHEN[e.getAttribute('data-when')](); }); }
+function build(){
+  autoHR();
+  const main=$('#main'); main.textContent='';
+  SECTIONS.forEach((sec,si)=>{
+    const s=el('section',{class:'sec',id:'sec-'+sec.id,'aria-labelledby':'h_'+sec.id,hidden:si!==S.cur});
+    s.append(el('div',{class:'sec-head'},[el('span',{class:'num','aria-hidden':'true',text:String(si+1)}),el('h2',{id:'h_'+sec.id,text:sec.title})]));
+    if(sec.lede) s.append(el('p',{class:'lede',text:sec.lede}));
+    sec.blocks.forEach(b=>s.append(blockEl(b)));
+    const pg=el('div',{class:'pager'});
+    if(si>0) pg.append(el('button',{type:'button',class:'btn ghost',text:'ก่อนหน้า',onclick:()=>show(si-1)})); else pg.append(el('span'));
+    if(si<LAST) pg.append(el('button',{type:'button',class:'btn',text:'ถัดไป: '+SECTIONS[si+1].short,onclick:()=>show(si+1)}));
+    else pg.append(el('button',{type:'button',class:'btn',text:'บันทึกไฟล์',onclick:()=>openPanel()}));
+    s.append(pg);
+    main.append(s);
+  });
+  buildTabs(); applyWhen(); updateTotals(); updateHead();
+  if(S.cur===LAST) renderReview();
+}
+function secHasData(sec){
+  return sec.blocks.some(b=>{
+    if(b.t==='fields') return b.fields.some(fd=>{ if(fd.k==='date_collect') return false; const v=S.f[fd.k]; return Array.isArray(v)?v.length>0:(v!==undefined&&v!==''&&v!==false); });
+    if(b.t==='quiz') return RISK_Q.some((q,i)=>typeof S.f['q'+(i+1)]==='number');
+    if(b.t==='table') return (S.t[b.k]||[]).some(r=>{
+      if(r.auto) return false;
+      return b.cols.some((c,ci)=>{
+        if(c.k==='freq') return false;
+        if(ci===0&&r.fix) return false;
+        const v=r[c.k]; return v!==undefined&&v!=='';
+      });
+    });
+    return false;
+  });
+}
+function buildTabs(){
+  const nav=$('#tabs'); nav.textContent='';
+  SECTIONS.forEach((sec,i)=>{
+    nav.append(el('button',{type:'button',class:'tab',id:'tab_'+i,onclick:()=>show(i)},[el('span',{class:'tn','aria-hidden':'true',text:String(i+1)}),el('span',{text:sec.short}),el('span',{class:'dot','aria-hidden':'true'})]));
+  });
+  updateTabs();
+}
+function updateTabs(){
+  SECTIONS.forEach((sec,i)=>{
+    const b=$('#tab_'+i); if(!b) return;
+    b.classList.toggle('on',i===S.cur);
+    if(i===S.cur) b.setAttribute('aria-current','step'); else b.removeAttribute('aria-current');
+    b.classList.toggle('has',secHasData(sec));
+  });
+}
+function updateHead(){ $('#hname').textContent=S.f.name||'ยังไม่ระบุชื่อ'; }
+function show(i){
+  S.cur=i;
+  SECTIONS.forEach((sec,si)=>{ const s=$('#sec-'+sec.id); if(s) s.hidden=(si!==i); });
+  updateTabs(); updateTotals();
+  const t=$('#tab_'+i); if(t&&t.scrollIntoView) t.scrollIntoView({inline:'center',block:'nearest'});
+  if(i===LAST) renderReview();
+  window.scrollTo({top:0});
+  persistSoon();
+}
+function changed(){
+  autoHR(); applyWhen(); updateTotals(); updateHead(); updateTabs(); refreshDob();
+  if(S.cur===LAST) renderReview();
+  persistSoon();
+}
+
+/* ---------- file panel ---------- */
+let DL=null, DLdone=false, opener=null;
+(async function(){
+  try{ if(window.claude&&window.claude.use) DL=await window.claude.use('downloads'); }catch(e){ DL=null; }
+  DLdone=true;
+  if(!DL){ $('#saveNote').textContent='กดแล้วเครื่องจะให้เลือกส่งไฟล์ (เช่น LINE หรืออีเมล) หรือดาวน์โหลดไฟล์ ถ้าไม่ได้ ใช้วิธีสำรองด้านล่าง'; }
+})();
+function openPanel(){ opener=document.activeElement; $('#panel').hidden=false; $('#newConfirm').hidden=true; $('#afterSave').hidden=true; $('#btnSave').focus(); }
+function closePanel(){ $('#panel').hidden=true; if(opener&&opener.focus) opener.focus(); }
+$('#btnFile').addEventListener('click',openPanel);
+$('#btnClose').addEventListener('click',closePanel);
+$('#panel').addEventListener('click',e=>{ if(e.target===$('#panel')) closePanel(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!$('#panel').hidden) closePanel(); });
+
+function fileName(){
+  const nm=(S.f.name||'ลูกค้าใหม่').replace(/[\\/:*?"<>|]/g,' ').replace(/\s+/g,' ').trim();
+  return 'CFP-jai_'+nm+'_'+todayISO().replace(/-/g,'')+'.txt';
+}
+function resetAll(){ S=fresh(); build(); persist(); $('#blob').value=''; window.scrollTo({top:0}); }
+$('#btnSave').addEventListener('click',async()=>{
+  if(!DL){
+    const text=JSON.stringify(payload(),null,2), name=fileName();
+    try{
+      const file=new File([text],name,{type:'text/plain'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        try{ await navigator.share({files:[file],title:name}); toast('ส่งไฟล์แล้ว'); $('#afterSave').hidden=false; return; }
+        catch(e){ if(e&&e.name==='AbortError'){ toast('ยกเลิกการส่งไฟล์'); return; } }
+      }
+      const url=URL.createObjectURL(new Blob([text],{type:'text/plain'}));
+      const a=document.createElement('a'); a.href=url; a.download=name; document.body.append(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),5000);
+      toast('ดาวน์โหลดไฟล์แล้ว ส่งไฟล์นี้ให้ที่ปรึกษา'); $('#afterSave').hidden=false;
+    }catch(e){ toast('บันทึกไฟล์ไม่สำเร็จ ใช้วิธีสำรองด้านล่าง'); $('#alt').open=true; }
+    return;
+  }
+  try{
+    const r=await DL.save({filename:fileName(),data:JSON.stringify(payload(),null,2)});
+    toast(r&&r.status==='delivered'?'ส่งไฟล์แล้ว':'ส่งไฟล์ให้บันทึกแล้ว ตรวจสอบว่าอยู่ในโฟลเดอร์ CFP Client');
+    $('#afterSave').hidden=false;
+  }catch(e){
+    const c=e&&e.code;
+    toast(c==='declined'?'ยกเลิกการบันทึกไฟล์':(c==='rate_limited'?'รอสักครู่แล้วกดอีกครั้ง':'บันทึกไฟล์ไม่สำเร็จ ลองวิธีสำรอง'));
+    if(c&&c!=='declined'&&c!=='rate_limited') $('#alt').open=true;
+  }
+});
+$('#btnClearAfter').addEventListener('click',()=>{ resetAll(); closePanel(); toast('ล้างฟอร์มบนเครื่องนี้แล้ว'); });
+$('#btnOpen').addEventListener('click',()=>$('#fileIn').click());
+function loadObj(o){
+  if(!adopt(o)){ toast('ไฟล์นี้ไม่ใช่ไฟล์ของ CFP-jai หรือเป็นเวอร์ชันเก่า'); return false; }
+  S.cur=0; build(); persist(); window.scrollTo({top:0}); return true;
+}
+$('#fileIn').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{ try{ if(loadObj(JSON.parse(String(rd.result)))){ toast('เปิดไฟล์ของ '+(S.f.name||'ผู้รับคำปรึกษา')+' แล้ว'); closePanel(); } }catch(err){ toast('อ่านไฟล์ไม่ได้ ไฟล์อาจเสียหาย'); } };
+  rd.onerror=()=>toast('อ่านไฟล์ไม่ได้');
+  rd.readAsText(f); e.target.value='';
+});
+$('#btnMake').addEventListener('click',async()=>{
+  const b=$('#blob'); b.value=JSON.stringify(payload(),null,2);
+  try{ await navigator.clipboard.writeText(b.value); toast('คัดลอกข้อมูลแล้ว วางเก็บไว้ในโน้ตหรือไฟล์ได้'); }
+  catch(e){ b.focus(); b.select(); toast('เลือกข้อความในช่องแล้วคัดลอกเอง'); }
+});
+$('#btnLoadBlob').addEventListener('click',()=>{
+  try{ if(loadObj(JSON.parse($('#blob').value))){ toast('โหลดข้อมูลแล้ว'); closePanel(); } }
+  catch(e){ toast('ข้อความนี้ไม่ใช่ข้อมูลที่ถูกต้อง'); }
+});
+$('#btnNew').addEventListener('click',()=>{ $('#newConfirm').hidden=false; $('#btnNewNo').focus(); });
+$('#btnNewNo').addEventListener('click',()=>{ $('#newConfirm').hidden=true; });
+$('#btnNewYes').addEventListener('click',()=>{ resetAll(); closePanel(); toast('เริ่มฟอร์มใหม่แล้ว'); });
+
+build();
+})();
+</script>
+
+</body></html>
